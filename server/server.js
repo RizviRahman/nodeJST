@@ -1,10 +1,31 @@
 const http = require('http');
 const fs = require('fs');
+const _ = require('lodash');
+
 
 const server = http.createServer((req, res)=>{
+
     // console.log(req);
     res.setHeader('Content-Type','text/html');
-    fs.readFile('../views/index.html',(err,data)=>{
+
+    let path = '../views/';
+    switch(req.url){
+        case '/':
+            path += 'index.html';
+            break;
+        case '/about':
+            path += 'about.html';
+            break;
+        case '/about-me':
+            res.statusCode =301;
+            res.setHeader('Location','/about')
+            break;
+        default:
+            path += '404.html';
+            break;
+    }
+
+    fs.readFile(path,(err,data)=>{
         if(err){
             console.log(err);
             res.end();
